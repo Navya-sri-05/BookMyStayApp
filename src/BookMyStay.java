@@ -1,27 +1,49 @@
+import java.util.*;
 
- import java.util.LinkedList;
-import java.util.Queue;
+public class  BookMyStay {
 
- public class BookMyStay {
+    public static void main(String[] args) {
 
-     public static void main(String[] args) {
+        System.out.println("Room Allocation Processing");
 
-            System.out.println("Booking Request Queue");
+        Queue<Reservation> bookingQueue = new LinkedList<>();
 
-            Queue<Reservation> bookingQueue = new LinkedList<>();
+        bookingQueue.add(new Reservation("Abhi", "Single"));
+        bookingQueue.add(new Reservation("Subha", "Single"));
+        bookingQueue.add(new Reservation("Vannathi", "Suite"));
 
-            bookingQueue.add(new Reservation("Abhi", "Single"));
-            bookingQueue.add(new Reservation("Subha", "Double"));
-            bookingQueue.add(new Reservation("Vannathi", "Suite"));
+        HashMap<String, Integer> inventory = new HashMap<>();
+        inventory.put("Single", 5);
+        inventory.put("Double", 3);
+        inventory.put("Suite", 2);
 
-            while (!bookingQueue.isEmpty()) {
-                Reservation request = bookingQueue.poll();
+        HashMap<String, Set<String>> allocatedRooms = new HashMap<>();
+        allocatedRooms.put("Single", new HashSet<>());
+        allocatedRooms.put("Double", new HashSet<>());
+        allocatedRooms.put("Suite", new HashSet<>());
 
-                System.out.println("Processing booking for Guest: "
+        while (!bookingQueue.isEmpty()) {
+
+            Reservation request = bookingQueue.poll();
+            String roomType = request.getRoomType();
+
+            if (inventory.get(roomType) > 0) {
+
+                int roomNumber = allocatedRooms.get(roomType).size() + 1;
+                String roomId = roomType + "-" + roomNumber;
+
+                allocatedRooms.get(roomType).add(roomId);
+
+                inventory.put(roomType, inventory.get(roomType) - 1);
+
+                System.out.println("Booking confirmed for Guest: "
                         + request.getGuestName()
-                        + ", Room Type: "
-                        + request.getRoomType());
+                        + ", Room ID: "
+                        + roomId);
+
+            } else {
+                System.out.println("No rooms available for " + request.getGuestName());
             }
         }
-
     }
+}
