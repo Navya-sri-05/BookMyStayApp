@@ -1,33 +1,26 @@
-public class BookMyStay {
 
+ import java.util.LinkedList;
+import java.util.Queue;
 
-        public static void main(String[] args) {
+ public class BookMyStay {
 
-            System.out.println("Room Search\n");
+     public static void main(String[] args) {
 
-            RoomInventory inventory = new RoomInventory();
+            System.out.println("Booking Request Queue");
 
-            Room single = new SingleRoom();
-            Room doubleRoom = new DoubleRoom();
-            Room suite = new SuiteRoom();
+            Queue<Reservation> bookingQueue = new LinkedList<>();
 
-            int singleAvailable = inventory.getAvailability("Single Room");
-            int doubleAvailable = inventory.getAvailability("Double Room");
-            int suiteAvailable = inventory.getAvailability("Suite Room");
+            bookingQueue.add(new Reservation("Abhi", "Single"));
+            bookingQueue.add(new Reservation("Subha", "Double"));
+            bookingQueue.add(new Reservation("Vannathi", "Suite"));
 
-            if (singleAvailable > 0) {
-                single.displayDetails();
-                System.out.println("Available: " + singleAvailable + "\n");
-            }
+            while (!bookingQueue.isEmpty()) {
+                Reservation request = bookingQueue.poll();
 
-            if (doubleAvailable > 0) {
-                doubleRoom.displayDetails();
-                System.out.println("Available: " + doubleAvailable + "\n");
-            }
-
-            if (suiteAvailable > 0) {
-                suite.displayDetails();
-                System.out.println("Available: " + suiteAvailable);
+                System.out.println("Processing booking for Guest: "
+                        + request.getGuestName()
+                        + ", Room Type: "
+                        + request.getRoomType());
             }
         }
 
