@@ -2,48 +2,40 @@ import java.util.*;
 
 public class  BookMyStay {
 
+    static class Service {
+        String name;
+        double cost;
+
+        Service(String name, double cost) {
+            this.name = name;
+            this.cost = cost;
+        }
+    }
+
     public static void main(String[] args) {
 
-        System.out.println("Room Allocation Processing");
+        System.out.println("Add-On Service Selection");
 
-        Queue<Reservation> bookingQueue = new LinkedList<>();
+        String reservationId = "Single-1";
 
-        bookingQueue.add(new Reservation("Abhi", "Single"));
-        bookingQueue.add(new Reservation("Subha", "Single"));
-        bookingQueue.add(new Reservation("Vannathi", "Suite"));
+        Service breakfast = new Service("Breakfast", 500);
+        Service wifi = new Service("WiFi", 300);
+        Service spa = new Service("Spa", 700);
 
-        HashMap<String, Integer> inventory = new HashMap<>();
-        inventory.put("Single", 5);
-        inventory.put("Double", 3);
-        inventory.put("Suite", 2);
+        List<Service> services = new ArrayList<>();
+        services.add(breakfast);
+        services.add(wifi);
+        services.add(spa);
 
-        HashMap<String, Set<String>> allocatedRooms = new HashMap<>();
-        allocatedRooms.put("Single", new HashSet<>());
-        allocatedRooms.put("Double", new HashSet<>());
-        allocatedRooms.put("Suite", new HashSet<>());
+        Map<String, List<Service>> serviceMap = new HashMap<>();
+        serviceMap.put(reservationId, services);
 
-        while (!bookingQueue.isEmpty()) {
-
-            Reservation request = bookingQueue.poll();
-            String roomType = request.getRoomType();
-
-            if (inventory.get(roomType) > 0) {
-
-                int roomNumber = allocatedRooms.get(roomType).size() + 1;
-                String roomId = roomType + "-" + roomNumber;
-
-                allocatedRooms.get(roomType).add(roomId);
-
-                inventory.put(roomType, inventory.get(roomType) - 1);
-
-                System.out.println("Booking confirmed for Guest: "
-                        + request.getGuestName()
-                        + ", Room ID: "
-                        + roomId);
-
-            } else {
-                System.out.println("No rooms available for " + request.getGuestName());
-            }
+        double totalCost = 0;
+        for (Service s : serviceMap.get(reservationId)) {
+            totalCost += s.cost;
         }
+
+        System.out.println("Reservation ID: " + reservationId);
+        System.out.println("Total Add-On Cost: " + totalCost);
     }
 }
