@@ -1,41 +1,39 @@
 import java.util.*;
 
-public class  BookMyStay {
+class BookingHistory {
+    private List<Reservation> history = new ArrayList<>();
 
-    static class Service {
-        String name;
-        double cost;
-
-        Service(String name, double cost) {
-            this.name = name;
-            this.cost = cost;
-        }
+    public void addReservation(Reservation reservation) {
+        history.add(reservation);
     }
 
+    public List<Reservation> getHistory() {
+        return history;
+    }
+}
+
+class BookingReportService {
+    public void generateReport(List<Reservation> history) {
+        System.out.println("Booking History and Reporting\n");
+        System.out.println("Booking History Report");
+
+        for (Reservation r : history) {
+            System.out.println("Guest: " + r.getGuestName() +
+                    ", Room Type: " + r.getRoomType());
+        }
+    }
+}
+
+public class BookMyStay {
     public static void main(String[] args) {
 
-        System.out.println("Add-On Service Selection");
+        BookingHistory bookingHistory = new BookingHistory();
 
-        String reservationId = "Single-1";
+        bookingHistory.addReservation(new Reservation("Abhi", "Single"));
+        bookingHistory.addReservation(new Reservation("Subha", "Double"));
+        bookingHistory.addReservation(new Reservation("Vanmathi", "Suite"));
 
-        Service breakfast = new Service("Breakfast", 500);
-        Service wifi = new Service("WiFi", 300);
-        Service spa = new Service("Spa", 700);
-
-        List<Service> services = new ArrayList<>();
-        services.add(breakfast);
-        services.add(wifi);
-        services.add(spa);
-
-        Map<String, List<Service>> serviceMap = new HashMap<>();
-        serviceMap.put(reservationId, services);
-
-        double totalCost = 0;
-        for (Service s : serviceMap.get(reservationId)) {
-            totalCost += s.cost;
-        }
-
-        System.out.println("Reservation ID: " + reservationId);
-        System.out.println("Total Add-On Cost: " + totalCost);
+        BookingReportService reportService = new BookingReportService();
+        reportService.generateReport(bookingHistory.getHistory());
     }
 }
