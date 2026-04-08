@@ -1,49 +1,47 @@
 import java.util.*;
 
-// Custom Exception
-class InvalidBookingException extends Exception {
-    public InvalidBookingException(String message) {
-        super(message);
-    }
-}
-
 public class BookMyStay {
-
-    // Validation Method
-    public static void validateBooking(String roomType) throws InvalidBookingException {
-
-        // Valid room types (CASE SENSITIVE)
-        if (!(roomType.equals("Single") ||
-                roomType.equals("Double") ||
-                roomType.equals("Suite"))) {
-
-            throw new InvalidBookingException("Invalid room type selected.");
-        }
-    }
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        System.out.println("Booking Cancellation\n");
 
-        try {
-            System.out.println("Booking Validation");
+        // Inventory (room availability)
+        Map<String, Integer> inventory = new HashMap<>();
+        inventory.put("Single", 5);
+        inventory.put("Double", 3);
+        inventory.put("Suite", 2);
 
-            System.out.print("Enter guest name: ");
-            String name = sc.nextLine();
+        // Assume a confirmed booking exists
+        String reservationId = "Single-1";
+        String roomType = "Single";
 
-            System.out.print("Enter room type (Single/Double/Suite): ");
-            String roomType = sc.nextLine();
+        // Stack for rollback (LIFO)
+        Stack<String> rollbackStack = new Stack<>();
 
-            // Validate
-            validateBooking(roomType);
+        // --- Cancellation Process ---
+        if (reservationId != null) {
 
-            // If valid
-            System.out.println("Booking successful for " + name);
+            // Push released room ID to stack
+            rollbackStack.push(reservationId);
 
-        } catch (InvalidBookingException e) {
-            System.out.println("Booking failed: " + e.getMessage());
+            // Restore inventory
+            inventory.put(roomType, inventory.get(roomType) + 1);
+
+            System.out.println("Booking cancelled successfully. Inventory restored for room type: " + roomType);
+        } else {
+            System.out.println("Cancellation failed: Reservation not found.");
+            return;
         }
 
-        sc.close();
+        // --- Rollback History ---
+        System.out.println("\nRollback History (Most Recent First):");
+
+        while (!rollbackStack.isEmpty()) {
+            System.out.println("Released Reservation ID: " + rollbackStack.pop());
+        }
+
+        // --- Updated Inventory ---
+        System.out.println("\nUpdated " + roomType + " Room Availability: " + inventory.get(roomType));
     }
 }
